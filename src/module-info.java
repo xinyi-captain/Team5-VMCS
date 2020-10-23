@@ -1,0 +1,9 @@
+/**
+ * 
+ */
+/**
+ * @author dongxinyi
+ *
+ */
+module Customer {
+}
