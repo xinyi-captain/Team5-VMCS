@@ -30,4 +30,8 @@ public class CurrencyHelper {
     public static double subtract(double a, double b){
         return Double.parseDouble(String.format("%.2f",(a-b)));
     }
+    
+    public static double add(double a, double b){
+        return Double.parseDouble(String.format("%.2f",(a+b)));
+    }
 }

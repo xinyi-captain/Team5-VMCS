@@ -5,6 +5,8 @@
  */
 package vendingmachinecontrolsystem.ui;
 
+import vendingmachinecontrolsystem.controller.CustomerController;
+
 /**
  *
  * @author Dannel
@@ -21,6 +23,7 @@ public class SimulatorControlPanel extends javax.swing.JFrame {
             throw new RuntimeException("Use get() method to get the single instance of this class.");
         }
         initComponents();
+        CustomerController.get();
     }
 
     public static SimulatorControlPanel get() {
@@ -157,7 +160,7 @@ public class SimulatorControlPanel extends javax.swing.JFrame {
         // TODO add your handling code here:
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                CustomerPanel.get().setVisible(true);
+                CustomerController.get().showPanel();
             }
         });
     }//GEN-LAST:event_jButton3ActionPerformed

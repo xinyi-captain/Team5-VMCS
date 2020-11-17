@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import vendingmachinecontrolsystem.controller.CustomerController;
 import vendingmachinecontrolsystem.model.Coin;
 import vendingmachinecontrolsystem.model.Drink;
 import vendingmachinecontrolsystem.model.Stock;
@@ -26,17 +28,12 @@ import vendingmachinecontrolsystem.util.PropertiesFactory;
  */
 public class VendingMachineControlSystem {
 
-    private final static List<Stock> COIN_STOCKS = new ArrayList<>();
-    private final static List<Stock> DRINK_STOCKS = new ArrayList<>();
-
     public static void main(String[] args) {
         initLooksAndFeel();
         SimulatorControlPanel.get().setVisible(true);
-        CustomerPanel.get();
-        initCoins();
         initDrinks();
-        CustomerPanel.get().setCoinStocks(COIN_STOCKS);
-        CustomerPanel.get().setDrinkStocks(DRINK_STOCKS);
+        CustomerController.get().setCoinStocks(initCoins());
+        CustomerController.get().setDrinkStocks(initDrinks());
     }
 
     private static void initLooksAndFeel() {
@@ -58,7 +55,8 @@ public class VendingMachineControlSystem {
         }
     }
 
-    private static void initCoins() {
+    private static List<Stock> initCoins() {
+    	List<Stock> coinStocks = new ArrayList<>();
         try {
             Properties coinProperties = PropertiesFactory.getCoinProperties();
             Enumeration<String> enums = (Enumeration<String>) coinProperties.propertyNames();
@@ -73,15 +71,17 @@ public class VendingMachineControlSystem {
                 coin.setName(key);
                 coin.setValue(Double.parseDouble(price));
                 coin.setQuantity(Integer.parseInt(quantity));
-                coin.addObserver(CustomerPanel.get());
-                COIN_STOCKS.add(coin);
+                coin.addObserver(CustomerController.get());
+                coinStocks.add(coin);
             }
         } catch (IOException ex) {
             Logger.getLogger(VendingMachineControlSystem.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return coinStocks;
     }
     
-    private static void initDrinks() {
+    private static List<Stock> initDrinks() {
+    	List<Stock> drinkStocks = new ArrayList<>();
         try {
             Properties drinkProperties = PropertiesFactory.getDrinkProperties();
             Enumeration<String> enums = (Enumeration<String>) drinkProperties.propertyNames();
@@ -96,11 +96,12 @@ public class VendingMachineControlSystem {
                 drink.setName(key.replace("_", "").toUpperCase());
                 drink.setValue(CurrencyHelper.coinsToAmount(price));
                 drink.setQuantity(Integer.parseInt(quantity));
-                drink.addObserver(CustomerPanel.get());
-                DRINK_STOCKS.add(drink);
+                drink.addObserver(CustomerController.get());
+                drinkStocks.add(drink);
             }
         } catch (IOException ex) {
             Logger.getLogger(VendingMachineControlSystem.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return drinkStocks;
     }
 }
