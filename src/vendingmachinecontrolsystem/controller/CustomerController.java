@@ -120,9 +120,9 @@ public class CustomerController implements Observer {
 
 	private double calculateHighestChange(double change) {
 		double result = 0;
-		double currentChange = change;
 		double remainder = change;
 		double lowestCoinDenomination = 0;
+		double highestPossibleMultiple = 0;
 
 		for (int i = 0; i < COIN_STOCKS.size(); i++) {
 			Coin coin = (Coin) COIN_STOCKS.get(i);
@@ -135,17 +135,37 @@ public class CustomerController implements Observer {
 		}
 
 		for (int i = 0; i < COIN_STOCKS.size(); i++) {
+			if (remainder == 0 | remainder <= lowestCoinDenomination)
+				break; // no coin available to subtract and return
+			System.out.println("remainder " + remainder);
+			System.out.println("lowestCoinDenomination " + lowestCoinDenomination);
+			System.out.println("result " + result);
 			Coin coin = (Coin) COIN_STOCKS.get(i);
 			if (coin.getQuantity() > 0) {
-				remainder = CurrencyHelper.subtract(currentChange, coin.getValue());
-				if (remainder < lowestCoinDenomination) {
-					break; // no coin available to subtract and return
+				if (coin.getValue() <= remainder) {
+					if (!checkIfHigerCoinAvailable(remainder, coin.getValue())) {
+						remainder = CurrencyHelper.subtract(remainder, coin.getValue());
+						result = CurrencyHelper.add(result, coin.getValue());
+						coin.setQuantity(coin.getQuantity() - 1); // must subtract to return to customer
+					}
 				}
-				result = CurrencyHelper.add(result, coin.getValue());
-				coin.setQuantity(coin.getQuantity() - 1); //must subtract to return to customer
 			}
-			if (i == COIN_STOCKS.size())
-				i = -1; // reset loop
+			if (i == COIN_STOCKS.size() - 1)
+				i = -1; // restart loop
+			System.out.println("i -----------" + i);
+		}
+		return result;
+	}
+
+	public boolean checkIfHigerCoinAvailable(double amount, double coinValueCheck) {
+		boolean result = false;
+		Iterator<Stock> iterator = COIN_STOCKS.iterator();
+		while (iterator.hasNext()) {
+			Coin coin = (Coin) iterator.next();
+			if (coin.getValue() >= amount && amount % coin.getValue() == 0) {
+				if (coin.getValue() > coinValueCheck)
+					result = true;
+			}
 		}
 		return result;
 	}
@@ -153,8 +173,9 @@ public class CustomerController implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		if (o instanceof Coin) {
+			System.out.println("Coin Update");
 			Iterator<Stock> iterator = COIN_STOCKS.iterator();
-			while(iterator.hasNext()) {
+			while (iterator.hasNext()) {
 				Coin coin = (Coin) iterator.next();
 				System.out.println(coin.toString());
 			}

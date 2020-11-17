@@ -148,7 +148,7 @@ public class CustomerPanel extends javax.swing.JFrame {
 	}
 
 	public void setSelectedDrink(Drink drink) {
-		selectedDrinkLabel.setText(drink.getName() + " - " + CurrencyHelper.toCoins(drink.getValue()));
+		selectedDrinkLabel.setText(drink.getName() + " --- " + CurrencyHelper.toCoins(drink.getValue()));
 		coinCollectTf.setText(NO_COINS_TEXT);
 		enableCoinButtons();
 	}
@@ -207,6 +207,7 @@ public class CustomerPanel extends javax.swing.JFrame {
 	public void dispenseDrink(Drink drink) {
 		selectedDrinkLabel.setText(null);
 		collectCanTf.setText(drink.getName());
+		terminateButton.setEnabled(false);
 	}
 
 	public void displayChange(double originalChange, double changeAvailable) {
@@ -216,6 +217,7 @@ public class CustomerPanel extends javax.swing.JFrame {
 	}
 
 	public void resetState() {
+		terminateButton.setEnabled(true);
 		noChangeLabel.setText(null);
 		insertedAmountTf.setText(NO_COINS_TEXT);
 		coinCollectTf.setText(NO_COINS_TEXT);
