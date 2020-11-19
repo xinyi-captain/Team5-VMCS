@@ -7,6 +7,8 @@ import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import vendingmachinecontrolsystem.memento.TransactionCaretaker;
+import vendingmachinecontrolsystem.memento.TransactionOriginator;
 import vendingmachinecontrolsystem.model.Coin;
 import vendingmachinecontrolsystem.model.Drink;
 import vendingmachinecontrolsystem.model.Stock;
@@ -19,8 +21,11 @@ public class CustomerController implements Observer {
 
 	private List<Stock> COIN_STOCKS;
 	private List<Stock> DRINK_STOCKS;
-	private Drink SELECTED_DRINK;
 	private CustomerPanel customerPanel;
+	private TransactionOriginator transactionCoinOriginator;
+	private TransactionOriginator transactionDrinkOriginator;
+	private TransactionCaretaker transactionCoinCaretaker;
+	private TransactionCaretaker transactionDrinkCaretaker;
 
 	public static CustomerController get() {
 		if (customerController == null) {
@@ -63,6 +68,8 @@ public class CustomerController implements Observer {
 	}
 
 	private void validCoin(Coin coin) {
+		transactionCoinOriginator.setStock(coin);
+		transactionDrinkCaretaker.addMemento(transactionCoinOriginator.saveStateToMemento());
 		coin.setQuantity(coin.getQuantity() + 1);
 		customerPanel.updateInsertedAmount(coin.getValue());
 		checkAmountSufficiency();
@@ -81,9 +88,16 @@ public class CustomerController implements Observer {
 		}
 	}
 
-	public void drinkEvent(Drink drink) {
-		SELECTED_DRINK = drink;
+	public void startTransaction(Drink drink) {
+		transactionDrinkOriginator = new TransactionOriginator();
+		transactionDrinkOriginator.setStock(drink);
+		transactionCoinOriginator = new TransactionOriginator();
+		transactionCoinCaretaker = new TransactionCaretaker();
+		transactionDrinkCaretaker = new TransactionCaretaker();
+		transactionDrinkCaretaker.addMemento(transactionDrinkOriginator.saveStateToMemento());
 		customerPanel.setSelectedDrink(drink);
+		drink.setQuantity(drink.getQuantity() - 1);
+		customerPanel.enableTerminateButton();
 	}
 
 	public boolean isDrinkAvailable(String drinkName) {
@@ -101,9 +115,10 @@ public class CustomerController implements Observer {
 
 	private void checkAmountSufficiency() {
 		double amount = CurrencyHelper.coinsToAmount(customerPanel.getInsertedAmount());
-		if (amount >= SELECTED_DRINK.getValue()) {
-			customerPanel.dispenseDrink(SELECTED_DRINK);
-			calculateChange(amount, SELECTED_DRINK.getValue());
+		Drink drink = getSelectedDrink();
+		if (amount >= drink.getValue()) {
+			customerPanel.dispenseDrink(drink);
+			calculateChange(amount, drink.getValue());
 		}
 	}
 
@@ -122,8 +137,6 @@ public class CustomerController implements Observer {
 		double result = 0;
 		double remainder = change;
 		double lowestCoinDenomination = 0;
-		double highestPossibleMultiple = 0;
-
 		for (int i = 0; i < COIN_STOCKS.size(); i++) {
 			Coin coin = (Coin) COIN_STOCKS.get(i);
 			if (coin.getQuantity() > 0) {
@@ -170,6 +183,36 @@ public class CustomerController implements Observer {
 		return result;
 	}
 
+	public void terminateTransaction() {
+		restoreDrinkStockAftTermination();
+		restoreCoinStockAftTermination();
+		transactionCoinOriginator = null;
+		transactionDrinkOriginator = null;
+		transactionCoinCaretaker = null;
+		transactionDrinkCaretaker = null;
+		customerPanel.disableTerminateButton();
+	}
+
+	public void restoreDrinkStockAftTermination() {
+		transactionDrinkOriginator.getStateFromMemento(transactionDrinkCaretaker.get(0));
+		Drink drink = (Drink) transactionDrinkOriginator.getStock();
+		drink.setQuantity(drink.getQuantity() + 1);
+	}
+
+	public void restoreCoinStockAftTermination() {
+		for (int i = 0; i < transactionCoinCaretaker.size(); i++) {
+			transactionCoinOriginator.getStateFromMemento(transactionCoinCaretaker.get(i));
+			Coin coin = (Coin) transactionCoinOriginator.getStock();
+			coin.setQuantity(coin.getQuantity() + 1);
+		}
+	}
+	
+	public Drink getSelectedDrink() {
+		transactionDrinkOriginator.getStateFromMemento(transactionDrinkCaretaker.get(0));
+		Drink drink = (Drink) transactionDrinkOriginator.getStock();
+		return drink;
+	}
+
 	@Override
 	public void update(Observable o, Object arg) {
 		if (o instanceof Coin) {
@@ -180,7 +223,12 @@ public class CustomerController implements Observer {
 				System.out.println(coin.toString());
 			}
 		} else if (o instanceof Drink) {
-			Drink drink = (Drink) o;
+			System.out.println("Drink Update");
+			Iterator<Stock> iterator = DRINK_STOCKS.iterator();
+			while (iterator.hasNext()) {
+				Drink drink = (Drink) iterator.next();
+				System.out.println(drink.toString());
+			}
 			customerPanel.refreshDrinkPanel(DRINK_STOCKS);
 		}
 	}

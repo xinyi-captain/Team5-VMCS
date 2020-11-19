@@ -51,4 +51,17 @@ public abstract class Stock extends Observable {
     public String toString() {
         return this.getClass().getSimpleName()+ "{" + "name=" + name + ", value=" + value + ", quantity=" + quantity + '}';
     }
+
+	@Override
+	public boolean equals(Object obj) {
+		Stock stock = (Stock) obj;
+		if(this.name.equalsIgnoreCase(stock.getName())
+				&& this.value == stock.getValue()
+				&& this.quantity == stock.getQuantity())
+			return true;
+		else
+			return false;
+	}
+    
+    
 }

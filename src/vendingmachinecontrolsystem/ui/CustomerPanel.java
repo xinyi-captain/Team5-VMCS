@@ -118,7 +118,7 @@ public class CustomerPanel extends javax.swing.JFrame {
 		jButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				CustomerController.get().drinkEvent(drink);
+				CustomerController.get().startTransaction(drink);
 			}
 		});
 
@@ -168,7 +168,7 @@ public class CustomerPanel extends javax.swing.JFrame {
 			jButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent evt) {
-					CustomerController.get().drinkEvent(drink);
+					CustomerController.get().startTransaction(drink);
 				}
 			});
 
@@ -217,7 +217,7 @@ public class CustomerPanel extends javax.swing.JFrame {
 	}
 
 	public void resetState() {
-		terminateButton.setEnabled(true);
+		terminateButton.setEnabled(false);
 		noChangeLabel.setText(null);
 		insertedAmountTf.setText(NO_COINS_TEXT);
 		coinCollectTf.setText(NO_COINS_TEXT);
@@ -307,6 +307,7 @@ public class CustomerPanel extends javax.swing.JFrame {
 				terminateButtonActionPerformed(evt);
 			}
 		});
+		terminateButton.setEnabled(false);
 		jPanel4.add(terminateButton);
 
 		jPanel5.setLayout(new java.awt.GridBagLayout());
@@ -411,12 +412,21 @@ public class CustomerPanel extends javax.swing.JFrame {
 		setLocationRelativeTo(null);
 	}// </editor-fold>//GEN-END:initComponents
 
+	public void enableTerminateButton() {
+		terminateButton.setEnabled(true);
+	}
+	
+	public void disableTerminateButton() {
+		terminateButton.setEnabled(false);
+	}
+	
 	private void terminateButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_terminateButtonActionPerformed
 		// TODO add your handling code here:
 		disableCoinButtons();
 		selectedDrinkLabel.setText(null);
 		coinCollectTf.setText(insertedAmountTf.getText());
 		insertedAmountTf.setText(NO_COINS_TEXT);
+		CustomerController.get().terminateTransaction();
 	}// GEN-LAST:event_terminateButtonActionPerformed
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables
