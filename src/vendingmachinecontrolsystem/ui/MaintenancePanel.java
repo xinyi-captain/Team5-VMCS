@@ -5,16 +5,22 @@
  */
 package vendingmachinecontrolsystem.ui;
 
+import vendingmachinecontrolsystem.controller.MaintainerController;
+import vendingmachinecontrolsystem.model.Coin;
+import vendingmachinecontrolsystem.model.Drink;
 import vendingmachinecontrolsystem.util.CurrencyHelper;
 import vendingmachinecontrolsystem.util.PropertiesFactory;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
@@ -32,42 +38,21 @@ public class MaintenancePanel extends javax.swing.JFrame {
     private static final String VALID_PASSWORD = "Valid Password";
     private static final String INVALID_PASSWORD = "Invalid Password";
 
-    private static volatile MaintenancePanel maintenacePanel;
-
     private String PASSWORD;
-    private Properties COIN_PROPERTIES;
-    private Properties DRINK_PROPERTIES;
     private boolean isLocked = true;
 
-    public static MaintenancePanel get() {
-        if (maintenacePanel == null) {
-            synchronized (MaintenancePanel.class) {
-                if (maintenacePanel == null) {
-                    maintenacePanel = new MaintenancePanel();
-                }
-            }
-        }
-        return maintenacePanel;
-    }
-
     public MaintenancePanel() {
-        try {
-            if (maintenacePanel != null) {
-                throw new RuntimeException("Use get() method to get the single instance of this class.");
-            }
-            PASSWORD = PropertiesFactory.getMachineProperties().getProperty("password");
-            COIN_PROPERTIES = PropertiesFactory.getCoinProperties();
-            DRINK_PROPERTIES = PropertiesFactory.getDrinkProperties();
-            initComponents();
-            initTextFieldListner();
-            initCoins();
-            initDrinks();
-            pack();
-            setLocationRelativeTo(null);
-            lock();
-        } catch (Exception ex) {
-            Logger.getLogger(MaintenancePanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    	try {
+			PASSWORD = PropertiesFactory.getMachineProperties().getProperty("password");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        initComponents();
+        initTextFieldListner();
     }
 
     /**
@@ -89,9 +74,9 @@ public class MaintenancePanel extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
+        coinPanel = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
+        drinkPanel = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -153,12 +138,12 @@ public class MaintenancePanel extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("Quantity of Coins Available:");
 
-        jPanel3.setLayout(new java.awt.GridLayout(0, 2));
+        coinPanel.setLayout(new java.awt.GridLayout(0, 2));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setText("Quantity of Drinks Available:");
 
-        jPanel4.setLayout(new java.awt.GridLayout(0, 2));
+        drinkPanel.setLayout(new java.awt.GridLayout(0, 2));
 
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
@@ -246,8 +231,8 @@ public class MaintenancePanel extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(coinPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(drinkPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -271,11 +256,11 @@ public class MaintenancePanel extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(coinPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(drinkPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(11, 11, 11)
@@ -288,11 +273,13 @@ public class MaintenancePanel extends javax.swing.JFrame {
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+        pack();
+		setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        showTotalCashHeld();
+        MaintainerController.get().showTotalCashHeld();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -307,12 +294,12 @@ public class MaintenancePanel extends javax.swing.JFrame {
         lock();
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void lock() {
+    public void lock() {
         resetPassword();
         jLabel4.setVisible(false);
-        jPanel3.setVisible(false);
+        coinPanel.setVisible(false);
         jLabel7.setVisible(false);
-        jPanel4.setVisible(false);
+        drinkPanel.setVisible(false);
         jPanel5.setVisible(false);
         jPanel6.setVisible(false);
         jPanel7.setVisible(false);
@@ -320,12 +307,12 @@ public class MaintenancePanel extends javax.swing.JFrame {
         jPanel9.setVisible(false);
     }
 
-    private void unlock() {
+    public void unlock() {
         resetPassword();
         jLabel4.setVisible(true);
-        jPanel3.setVisible(true);
+        coinPanel.setVisible(true);
         jLabel7.setVisible(true);
-        jPanel4.setVisible(true);
+        drinkPanel.setVisible(true);
         jPanel5.setVisible(true);
         jPanel6.setVisible(true);
         jPanel7.setVisible(true);
@@ -346,19 +333,7 @@ public class MaintenancePanel extends javax.swing.JFrame {
         });
     }
 
-    private void showTotalCashHeld() {
-        Enumeration<String> enums = (Enumeration<String>) COIN_PROPERTIES.propertyNames();
-        float total = 0f;
-        while (enums.hasMoreElements()) {
-            String key = enums.nextElement();
-            String value = COIN_PROPERTIES.getProperty(key);
-            String[] data = value.split(PropertiesFactory.SEPERATOR);
-            float amount = Float.parseFloat(data[0]);
-            int quantity = Integer.parseInt(data[1]);
-            if (!key.equalsIgnoreCase("Invalid")) {
-                total += amount * quantity;
-            }
-        }
+    public void showTotalCashHeld(double total) {
         jTextField2.setText(CurrencyHelper.toCoins(total));
         jTextField3.setText("0 c");
     }
@@ -406,43 +381,59 @@ public class MaintenancePanel extends javax.swing.JFrame {
             }
         });
     }
-
-    private void initDrinks() {
-        Enumeration<String> enums = (Enumeration<String>) DRINK_PROPERTIES.propertyNames();
-        while (enums.hasMoreElements()) {
-            String key = enums.nextElement();
-            String value = DRINK_PROPERTIES.getProperty(key);
-            String[] data = value.split(PropertiesFactory.SEPERATOR);
-            String price = data[0];
-            int quantity = Integer.parseInt(data[1]);
-
+    
+    public void addNewCoins(Coin coin) {
+    	if (!coin.getName().equalsIgnoreCase("Invalid")) {
             JTextField jTextField = new JTextField();
             jTextField.setEditable(false);
             jTextField.setBackground(new java.awt.Color(0, 0, 0));
             jTextField.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
             jTextField.setForeground(new java.awt.Color(255, 255, 255));
             jTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            jTextField.setText(String.valueOf(quantity));
+            jTextField.setText(String.valueOf(coin.getQuantity()));
             jTextField.setVisible(false);
 
             JButton jButton = new JButton();
             jButton.setFont(new java.awt.Font("Tahoma", 0, 14));
-            jButton.setText(key.replace("_", " ").toUpperCase());
+            jButton.setText(coin.getName());
             jButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent evt) {
-                    drinkButton(jTextField, price);
+                    coinButton(jTextField);
                 }
             });
-
-            jPanel4.add(jButton);
-            jPanel4.add(jTextField);
+            coinPanel.add(jButton);
+            coinPanel.add(jTextField);
         }
-    }
+	}
+
+	public void addNewDrink(Drink drink) {
+		JTextField jTextField = new JTextField();
+        jTextField.setEditable(false);
+        jTextField.setBackground(new java.awt.Color(0, 0, 0));
+        jTextField.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jTextField.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextField.setText(String.valueOf(drink.getQuantity()));
+        jTextField.setVisible(false);
+
+        JButton jButton = new JButton();
+        jButton.setFont(new java.awt.Font("Tahoma", 0, 14));
+        jButton.setText(drink.getName().replace("_", " ").toUpperCase());
+        jButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                drinkButton(jTextField, String.valueOf(drink.getValue()));
+            }
+        });
+
+        drinkPanel.add(jButton);
+        drinkPanel.add(jTextField);
+	}
 
     private void drinkButton(JTextField jTextField, String price) {
         jTextField1.setText(price);
-        Component[] comp = jPanel4.getComponents();
+        Component[] comp = drinkPanel.getComponents();
         for (int i = 0; i < comp.length; i++) {
             if (comp[i] instanceof JTextField) {
                 JTextField jtf = (JTextField) comp[i];
@@ -459,41 +450,8 @@ public class MaintenancePanel extends javax.swing.JFrame {
         }
     }
 
-    private void initCoins() {
-        Enumeration<String> enums = (Enumeration<String>) COIN_PROPERTIES.propertyNames();
-        while (enums.hasMoreElements()) {
-            String key = enums.nextElement();
-            String value = COIN_PROPERTIES.getProperty(key);
-            String[] data = value.split(PropertiesFactory.SEPERATOR);
-            int quantity = Integer.parseInt(data[1]);
-
-            if (!key.equalsIgnoreCase("Invalid")) {
-                JTextField jTextField = new JTextField();
-                jTextField.setEditable(false);
-                jTextField.setBackground(new java.awt.Color(0, 0, 0));
-                jTextField.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-                jTextField.setForeground(new java.awt.Color(255, 255, 255));
-                jTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-                jTextField.setText(String.valueOf(quantity));
-                jTextField.setVisible(false);
-
-                JButton jButton = new JButton();
-                jButton.setFont(new java.awt.Font("Tahoma", 0, 14));
-                jButton.setText(key);
-                jButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent evt) {
-                        coinButton(jTextField);
-                    }
-                });
-                jPanel3.add(jButton);
-                jPanel3.add(jTextField);
-            }
-        }
-    }
-
     private void coinButton(JTextField jTextField) {
-        Component[] comp = jPanel3.getComponents();
+        Component[] comp = coinPanel.getComponents();
         for (int i = 0; i < comp.length; i++) {
             if (comp[i] instanceof JTextField) {
                 JTextField jtf = (JTextField) comp[i];
@@ -528,8 +486,8 @@ public class MaintenancePanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel coinPanel;
+    private javax.swing.JPanel drinkPanel;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;

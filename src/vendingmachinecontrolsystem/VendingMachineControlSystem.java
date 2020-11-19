@@ -14,10 +14,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import vendingmachinecontrolsystem.controller.CustomerController;
+import vendingmachinecontrolsystem.controller.MachineryController;
+import vendingmachinecontrolsystem.controller.MaintainerController;
 import vendingmachinecontrolsystem.model.Coin;
 import vendingmachinecontrolsystem.model.Drink;
 import vendingmachinecontrolsystem.model.Stock;
-import vendingmachinecontrolsystem.ui.CustomerPanel;
 import vendingmachinecontrolsystem.ui.SimulatorControlPanel;
 import vendingmachinecontrolsystem.util.CurrencyHelper;
 import vendingmachinecontrolsystem.util.PropertiesFactory;
@@ -31,9 +32,15 @@ public class VendingMachineControlSystem {
     public static void main(String[] args) {
         initLooksAndFeel();
         SimulatorControlPanel.get().setVisible(true);
-        initDrinks();
-        CustomerController.get().setCoinStocks(initCoins());
-        CustomerController.get().setDrinkStocks(initDrinks());
+        List<Stock> coinStocks = initCoins(); 
+        List<Stock> drinkStocks = initDrinks();
+        CustomerController.get().setCoinStocks(coinStocks);
+        CustomerController.get().setDrinkStocks(drinkStocks);
+        MaintainerController.get().setCoinStocks(coinStocks);
+        MaintainerController.get().setDrinkStocks(drinkStocks);
+        MaintainerController.get().lock();
+        MachineryController.get().setCoinStocks(coinStocks);
+        MachineryController.get().setDrinkStocks(drinkStocks);
     }
 
     private static void initLooksAndFeel() {
@@ -72,6 +79,8 @@ public class VendingMachineControlSystem {
                 coin.setValue(Double.parseDouble(price));
                 coin.setQuantity(Integer.parseInt(quantity));
                 coin.addObserver(CustomerController.get());
+                coin.addObserver(MaintainerController.get());
+                coin.addObserver(MachineryController.get());
                 coinStocks.add(coin);
             }
         } catch (IOException ex) {
@@ -97,6 +106,8 @@ public class VendingMachineControlSystem {
                 drink.setValue(CurrencyHelper.coinsToAmount(price));
                 drink.setQuantity(Integer.parseInt(quantity));
                 drink.addObserver(CustomerController.get());
+                drink.addObserver(MaintainerController.get());
+                drink.addObserver(MachineryController.get());
                 drinkStocks.add(drink);
             }
         } catch (IOException ex) {

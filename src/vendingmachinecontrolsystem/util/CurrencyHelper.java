@@ -12,7 +12,7 @@ package vendingmachinecontrolsystem.util;
 public class CurrencyHelper {
 
     public static String toCoins(double amount) {
-        return String.valueOf((amount * 100.0)) + " c";
+        return String.valueOf((int)(amount * 100.0)) + " c";
     }
     
     public static double coinsToAmount(String coins){

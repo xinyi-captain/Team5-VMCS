@@ -420,12 +420,15 @@ public class CustomerPanel extends javax.swing.JFrame {
 		terminateButton.setEnabled(false);
 	}
 	
-	private void terminateButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_terminateButtonActionPerformed
-		// TODO add your handling code here:
+	public void terminateTransaction() {
 		disableCoinButtons();
 		selectedDrinkLabel.setText(null);
 		coinCollectTf.setText(insertedAmountTf.getText());
 		insertedAmountTf.setText(NO_COINS_TEXT);
+	}
+	
+	private void terminateButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_terminateButtonActionPerformed
+		// TODO add your handling code here:
 		CustomerController.get().terminateTransaction();
 	}// GEN-LAST:event_terminateButtonActionPerformed
 

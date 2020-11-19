@@ -57,6 +57,8 @@ public class CustomerController implements Observer {
 			Coin coin = (Coin) iterator.next();
 			customerPanel.addNewCoins(coin);
 		}
+		customerPanel.pack();
+		customerPanel.setLocationRelativeTo(null);
 	}
 
 	public void coinEvent(Coin coin) {
@@ -86,6 +88,8 @@ public class CustomerController implements Observer {
 			Drink drink = (Drink) iterator.next();
 			customerPanel.addNewDrink(drink);
 		}
+		customerPanel.pack();
+		customerPanel.setLocationRelativeTo(null);
 	}
 
 	public void startTransaction(Drink drink) {
@@ -190,6 +194,7 @@ public class CustomerController implements Observer {
 		transactionDrinkOriginator = null;
 		transactionCoinCaretaker = null;
 		transactionDrinkCaretaker = null;
+		customerPanel.terminateTransaction();
 		customerPanel.disableTerminateButton();
 	}
 
@@ -215,6 +220,7 @@ public class CustomerController implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
+		System.out.println("---------------------- CustomerController UPDATE Start ----------------------");
 		if (o instanceof Coin) {
 			System.out.println("Coin Update");
 			Iterator<Stock> iterator = COIN_STOCKS.iterator();
@@ -231,6 +237,7 @@ public class CustomerController implements Observer {
 			}
 			customerPanel.refreshDrinkPanel(DRINK_STOCKS);
 		}
+		System.out.println("---------------------- CustomerController UPDATE End ----------------------");
 	}
 
 }

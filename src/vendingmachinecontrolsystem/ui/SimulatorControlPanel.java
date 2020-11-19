@@ -6,6 +6,8 @@
 package vendingmachinecontrolsystem.ui;
 
 import vendingmachinecontrolsystem.controller.CustomerController;
+import vendingmachinecontrolsystem.controller.MachineryController;
+import vendingmachinecontrolsystem.controller.MaintainerController;
 
 /**
  *
@@ -23,7 +25,6 @@ public class SimulatorControlPanel extends javax.swing.JFrame {
             throw new RuntimeException("Use get() method to get the single instance of this class.");
         }
         initComponents();
-        CustomerController.get();
     }
 
     public static SimulatorControlPanel get() {
@@ -142,7 +143,7 @@ public class SimulatorControlPanel extends javax.swing.JFrame {
         // TODO add your handling code here:
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                MachineryPanel.get().setVisible(true);
+                MachineryController.get().showPanel();
             }
         });
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -151,7 +152,7 @@ public class SimulatorControlPanel extends javax.swing.JFrame {
         // TODO add your handling code here:
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                MaintenancePanel.get().setVisible(true);
+            	MaintainerController.get().showPanel();
             }
         });
     }//GEN-LAST:event_jButton2ActionPerformed
