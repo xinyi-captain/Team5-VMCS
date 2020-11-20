@@ -6,10 +6,10 @@
 package vendingmachinecontrolsystem.ui;
 
 import vendingmachinecontrolsystem.controller.MaintainerController;
+import vendingmachinecontrolsystem.factory.PropertiesFactory;
 import vendingmachinecontrolsystem.model.Coin;
 import vendingmachinecontrolsystem.model.Drink;
 import vendingmachinecontrolsystem.util.CurrencyHelper;
-import vendingmachinecontrolsystem.util.PropertiesFactory;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,19 +38,14 @@ public class MaintenancePanel extends javax.swing.JFrame {
     private static final String VALID_PASSWORD = "Valid Password";
     private static final String INVALID_PASSWORD = "Invalid Password";
 
-    private String PASSWORD;
+    private PropertiesFactory propertiesFactory;
+    private String PASSWORD="123";
     private boolean isLocked = true;
 
     public MaintenancePanel() {
-    	try {
-			PASSWORD = PropertiesFactory.getMachineProperties().getProperty("password");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	propertiesFactory = new PropertiesFactory();
+    	PASSWORD = propertiesFactory.getProperty(PropertiesFactory.MACHINE)
+    			.getProperty("password");
         initComponents();
         initTextFieldListner();
     }

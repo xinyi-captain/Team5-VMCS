@@ -8,6 +8,7 @@ package vendingmachinecontrolsystem.ui;
 import vendingmachinecontrolsystem.controller.CustomerController;
 import vendingmachinecontrolsystem.controller.MachineryController;
 import vendingmachinecontrolsystem.controller.MaintainerController;
+import vendingmachinecontrolsystem.controller.SimulatorController;
 
 /**
  *
@@ -18,25 +19,10 @@ public class SimulatorControlPanel extends javax.swing.JFrame {
     /**
      * Creates new form SimulatorControlPanel
      */
-    private static volatile SimulatorControlPanel simulatorControlPanel;
-
-    private SimulatorControlPanel() {
-        if (simulatorControlPanel != null) {
-            throw new RuntimeException("Use get() method to get the single instance of this class.");
-        }
-        initComponents();
-    }
-
-    public static SimulatorControlPanel get() {
-        if (simulatorControlPanel == null) {
-            synchronized (SimulatorControlPanel.class) {
-                if (simulatorControlPanel == null) {
-                    simulatorControlPanel = new SimulatorControlPanel();
-                }
-            }
-        }
-        return simulatorControlPanel;
-    }
+    
+	public SimulatorControlPanel() {
+		initComponents();
+	}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -141,29 +127,17 @@ public class SimulatorControlPanel extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                MachineryController.get().showPanel();
-            }
-        });
+    	SimulatorController.get().showMachineryPanel();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-            	MaintainerController.get().showPanel();
-            }
-        });
+    	SimulatorController.get().showMaintenancePanel();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                CustomerController.get().showPanel();
-            }
-        });
+    	SimulatorController.get().showCustomerPanel();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
