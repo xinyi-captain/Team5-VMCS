@@ -315,7 +315,7 @@ public class MaintenancePanel extends javax.swing.JFrame {
         jPanel9.setVisible(true);
     }
 
-    private void resetPassword() {
+    public void resetPassword() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -332,6 +332,11 @@ public class MaintenancePanel extends javax.swing.JFrame {
         jTextField2.setText(CurrencyHelper.toCoins(total));
         jTextField3.setText("0 c");
     }
+    
+    public String getEnterPassword() {
+    	String password = new String(jPasswordField1.getPassword());
+    	return password;
+    }
 
     private void checkPassword() {
         String password = new String(jPasswordField1.getPassword());
@@ -344,7 +349,7 @@ public class MaintenancePanel extends javax.swing.JFrame {
         }
     }
 
-    private void validPassword() {
+    public void validPassword() {
         jLabel3.setText(VALID_PASSWORD);
         jLabel6.setText(null);
         if (isLocked) {
@@ -353,7 +358,7 @@ public class MaintenancePanel extends javax.swing.JFrame {
         }
     }
 
-    private void invalidPassword() {
+    public void invalidPassword() {
         jLabel3.setText(null);
         jLabel6.setText(INVALID_PASSWORD);
     }
@@ -362,17 +367,17 @@ public class MaintenancePanel extends javax.swing.JFrame {
         jPasswordField1.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void changedUpdate(DocumentEvent e) {
-                checkPassword();
+            	MaintainerController.get().checkPassword();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                checkPassword();
+            	MaintainerController.get().checkPassword();
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                checkPassword();
+            	MaintainerController.get().checkPassword();
             }
         });
     }

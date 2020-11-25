@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import vendingmachinecontrolsystem.factory.PropertiesFactory;
 import vendingmachinecontrolsystem.model.Coin;
 import vendingmachinecontrolsystem.model.Drink;
 import vendingmachinecontrolsystem.model.Stock;
@@ -19,6 +20,8 @@ public class MaintainerController implements Observer {
 	private List<Stock> COIN_STOCKS;
 	private List<Stock> DRINK_STOCKS;
 	private MaintenancePanel maintenancePanel;
+    private PropertiesFactory propertiesFactory;
+    private String PASSWORD="123";
 
 	public static MaintainerController get() {
 		if (maintainerController == null) {
@@ -35,6 +38,9 @@ public class MaintainerController implements Observer {
 		if (maintainerController != null) {
 			throw new RuntimeException("Use get() method to get the single instance of this class.");
 		}
+		propertiesFactory = new PropertiesFactory();
+    	PASSWORD = propertiesFactory.getProperty(PropertiesFactory.MACHINE)
+    			.getProperty("password");
 		maintenancePanel = new MaintenancePanel();
 	}
 	
@@ -50,6 +56,17 @@ public class MaintainerController implements Observer {
 		if (maintenancePanel != null)
 			maintenancePanel.setVisible(true);
 	}
+	
+    public void checkPassword() {
+        String password = maintenancePanel.getEnterPassword();
+        if(password.isEmpty() || password == null){
+        	maintenancePanel.resetPassword();  
+        } else if (password.equals(PASSWORD)) {
+        	maintenancePanel. validPassword();
+        } else {
+        	maintenancePanel.invalidPassword();
+        }
+    }
 	
 	public void setDrinkStocks(List<Stock> drinkList) {
 		DRINK_STOCKS = drinkList;
