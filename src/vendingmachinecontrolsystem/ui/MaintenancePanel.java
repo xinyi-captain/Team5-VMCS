@@ -5,6 +5,8 @@
  */
 package vendingmachinecontrolsystem.ui;
 
+import vendingmachinecontrolsystem.controller.CustomerController;
+import vendingmachinecontrolsystem.controller.MachineryController;
 import vendingmachinecontrolsystem.controller.MaintainerController;
 import vendingmachinecontrolsystem.factory.PropertiesFactory;
 import vendingmachinecontrolsystem.model.Coin;
@@ -304,6 +306,8 @@ public class MaintenancePanel extends javax.swing.JFrame {
 
     public void unlock() {
         resetPassword();
+        CustomerController.get().terminateTransaction();
+        MachineryController.get().unLockDoor();
         jLabel4.setVisible(true);
         coinPanel.setVisible(true);
         jLabel7.setVisible(true);

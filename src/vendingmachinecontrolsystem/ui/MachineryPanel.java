@@ -5,11 +5,21 @@
  */
 package vendingmachinecontrolsystem.ui;
 
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.MaskFormatter;
+import javax.swing.text.NumberFormatter;
 
+import vendingmachinecontrolsystem.controller.MachineryController;
+import vendingmachinecontrolsystem.controller.MaintainerController;
 import vendingmachinecontrolsystem.model.Coin;
 import vendingmachinecontrolsystem.model.Drink;
+
+import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.text.NumberFormat;
+import java.util.HashMap;
 
 /**
  *
@@ -18,49 +28,134 @@ import vendingmachinecontrolsystem.model.Drink;
 public class MachineryPanel extends javax.swing.JFrame {
 
 	private boolean isLocked = true;
+	private HashMap<String,JTextField> drinkQtyTextField;
+	private HashMap<String,JTextField> coinQtyTextField;
 
 	/**
 	 * Creates new form MachineryPanel
 	 */
 	public MachineryPanel() {
 		initComponents();
-		jCheckBox1.setSelected(isLocked);
+		drinkQtyTextField=new HashMap<>();
+		coinQtyTextField=new HashMap<>();
+//		doorStateCheckBox.setSelected(isLocked);
 	}
 
 	public void addNewCoins(Coin coin) {
 		if (!coin.getName().equalsIgnoreCase("Invalid")) {
-			JLabel jLabel = new JLabel();
-			jLabel.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-			jLabel.setFont(new java.awt.Font("Tahoma", 0, 14));
-			jLabel.setText(coin.getName());
+			JLabel coinLabel = new JLabel();
+			coinLabel.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+			coinLabel.setFont(new java.awt.Font("Tahoma", 0, 14));
+			coinLabel.setText(coin.getName());
 
-			JTextField jTextField = new JTextField();
-			jTextField.setBackground(new java.awt.Color(0, 0, 0));
-			jTextField.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-			jTextField.setForeground(java.awt.Color.YELLOW);
-			jTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-			jTextField.setText(String.valueOf(coin.getQuantity()));
 
-			coinPanel.add(jLabel);
-			coinPanel.add(jTextField);
+
+
+			JTextField coinQty=quantityUI(coin.getQuantity());
+
+			coinPanel.add(coinLabel);
+			coinPanel.add(coinQty);
+			coinQty.addActionListener(actionEvent -> {
+
+				int qty=Integer.valueOf(coinQty.getText());
+				if(qty>=0&&qty<=40){
+					coin.setQuantity(Integer.valueOf(coinQty.getText()));
+
+				}else{
+					JOptionPane.showMessageDialog(this,
+							"Quantity must be between 0 and 40");
+
+				}
+			});
+			coinQtyTextField.put(coin.getName(),coinQty);
+
 		}
 	}
 
-	public void addNewDrink(Drink drink) {
-		JLabel jLabel = new JLabel();
-		jLabel.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-		jLabel.setFont(new java.awt.Font("Tahoma", 0, 14));
-		jLabel.setText(drink.getName().replace("_", " ").toUpperCase());
 
-		JTextField jTextField = new JTextField();
-		jTextField.setBackground(new java.awt.Color(0, 0, 0));
-		jTextField.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-		jTextField.setForeground(java.awt.Color.YELLOW);
-		jTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-		jTextField.setText(String.valueOf(drink.getQuantity()));
 
-		drinkPanel.add(jLabel);
-		drinkPanel.add(jTextField);
+	public void addNewDrink(final  Drink drink) {
+		JLabel drinkLabel = new JLabel();
+		drinkLabel.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+		drinkLabel.setFont(new java.awt.Font("Tahoma", 0, 14));
+		drinkLabel.setText(drink.getName().replace("_", " ").toUpperCase());
+
+		JTextField drinkQty=quantityUI(drink.getQuantity());
+
+		drinkQty.addActionListener(actionEvent -> {
+			int qty=Integer.valueOf(drinkQty.getText());
+			if(qty>=0&&qty<=20){
+				drink.setQuantity(Integer.valueOf(drinkQty.getText()));
+
+			}else{
+				JOptionPane.showMessageDialog(this,
+						"Quantity must be between 0 and 20");
+			}
+		});
+
+		drinkPanel.add(drinkLabel);
+		drinkPanel.add(drinkQty);
+		drinkQtyTextField.put(drink.getName(),drinkQty);
+
+	}
+
+	private JFormattedTextField quantityUI(int quantity) {
+		NumberFormat longFormat = NumberFormat.getIntegerInstance();
+
+		NumberFormatter numberFormatter = new NumberFormatter(longFormat);
+		numberFormatter.setValueClass(Long.class); //optional, ensures you will always get a long value
+		numberFormatter.setAllowsInvalid(false); //this is the key!!
+		numberFormatter.setMinimum(0l); //Optional
+
+
+		JFormattedTextField quantityTextField = new JFormattedTextField(numberFormatter);
+		quantityTextField.setEnabled(false);
+
+		quantityTextField.setBackground(new java.awt.Color(0, 0, 0));
+		quantityTextField.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+		quantityTextField.setForeground(java.awt.Color.YELLOW);
+		quantityTextField.setHorizontalAlignment(JTextField.CENTER);
+		quantityTextField.setText(String.valueOf(quantity));
+		quantityTextField.setDisabledTextColor(java.awt.Color.YELLOW);
+
+		return quantityTextField;
+	}
+
+	public void updateDrinkUI(Drink drink){
+		drinkQtyTextField.get(drink.getName()).setText(String.valueOf(drink.getQuantity()));
+	}
+	public void updateCoinUI(Coin coin){
+		coinQtyTextField.get(coin.getName()).setText(String.valueOf(coin.getQuantity()));
+	}
+
+
+	public void changeTextFieldState(boolean state){
+		coinQtyTextField.values().forEach(v->{
+			System.out.println("Coin ui update");
+			changeTextFieldState(state, v);
+
+		});
+		drinkQtyTextField.values().forEach(textField->{
+			System.out.println("Drink ui update");
+
+			changeTextFieldState(state, textField);
+		});
+	}
+
+	private void changeTextFieldState(boolean state, JTextField v) {
+		if(state){
+			v.setEnabled(false);
+
+			v.setBackground(new Color(0, 0, 0));
+			v.setFont(new Font("Tahoma", 0, 14)); // NOI18N
+			v.setForeground(Color.YELLOW);
+		}else{
+			v.setEnabled(true);
+
+			v.setBackground(new Color(255, 255, 255));
+			v.setFont(new Font("Tahoma", 0, 14)); // NOI18N
+			v.setForeground(Color.BLACK);
+		}
 	}
 
 	/**
@@ -73,32 +168,33 @@ public class MachineryPanel extends javax.swing.JFrame {
 	// Code">//GEN-BEGIN:initComponents
 	private void initComponents() {
 
-		jLabel1 = new javax.swing.JLabel();
-		jLabel4 = new javax.swing.JLabel();
+		header = new javax.swing.JLabel();
+		coinQtyLabel = new javax.swing.JLabel();
 		coinPanel = new javax.swing.JPanel();
-		jLabel7 = new javax.swing.JLabel();
+		drinkQtyLabel = new javax.swing.JLabel();
 		drinkPanel = new javax.swing.JPanel();
-		jCheckBox1 = new javax.swing.JCheckBox();
+		doorStateCheckBox = new javax.swing.JCheckBox();
 
 		setTitle("VMCS - Machinery Panel");
 
-		jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-		jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-		jLabel1.setText("Machinery Panel");
+		header.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+		header.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+		header.setText("Machinery Panel");
 
-		jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-		jLabel4.setText("Quantity of Coins Available:");
+		coinQtyLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+		coinQtyLabel.setText("Quantity of Coins Available:");
 
 		coinPanel.setLayout(new java.awt.GridLayout(0, 2));
 
-		jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-		jLabel7.setText("Quantity of Drinks Available:");
+		drinkQtyLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+		drinkQtyLabel.setText("Quantity of Drinks Available:");
 
 		drinkPanel.setLayout(new java.awt.GridLayout(0, 2));
 
-		jCheckBox1.setText("Door Locked");
-		jCheckBox1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-		jCheckBox1.addItemListener(new java.awt.event.ItemListener() {
+		doorStateCheckBox.setText("Door Locked");
+		doorStateCheckBox.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+		doorStateCheckBox.setSelected(true);
+		doorStateCheckBox.addItemListener(new java.awt.event.ItemListener() {
 			public void itemStateChanged(java.awt.event.ItemEvent evt) {
 				jCheckBox1ItemStateChanged(evt);
 			}
@@ -109,25 +205,25 @@ public class MachineryPanel extends javax.swing.JFrame {
 		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
 				.createSequentialGroup().addContainerGap()
 				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+						.addComponent(header, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
 						.addComponent(coinPanel, javax.swing.GroupLayout.DEFAULT_SIZE,
 								javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(drinkPanel, javax.swing.GroupLayout.DEFAULT_SIZE,
 								javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGroup(layout.createSequentialGroup()
 								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-										.addComponent(jLabel4).addComponent(jLabel7))
+										.addComponent(coinQtyLabel).addComponent(drinkQtyLabel))
 								.addGap(0, 0, Short.MAX_VALUE))
-						.addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE,
+						.addComponent(doorStateCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE,
 								javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 				.addContainerGap()));
 		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(layout.createSequentialGroup().addContainerGap().addComponent(jLabel1).addGap(18, 18, 18)
-						.addComponent(jLabel4).addGap(18, 18, 18)
+				.addGroup(layout.createSequentialGroup().addContainerGap().addComponent(header).addGap(18, 18, 18)
+						.addComponent(coinQtyLabel).addGap(18, 18, 18)
 						.addComponent(coinPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 6, Short.MAX_VALUE)
-						.addGap(18, 18, 18).addComponent(jLabel7).addGap(18, 18, 18)
+						.addGap(18, 18, 18).addComponent(drinkQtyLabel).addGap(18, 18, 18)
 						.addComponent(drinkPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 19, Short.MAX_VALUE)
-						.addGap(18, 18, 18).addComponent(jCheckBox1)
+						.addGap(18, 18, 18).addComponent(doorStateCheckBox)
 						.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 		pack();
 		setLocationRelativeTo(null);
@@ -135,15 +231,50 @@ public class MachineryPanel extends javax.swing.JFrame {
 
 	private void jCheckBox1ItemStateChanged(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_jCheckBox1ItemStateChanged
 		// TODO add your handling code here:
+		if(doorStateCheckBox.isSelected()&&!isLocked){
+			MachineryController.get().lockDoor();
+		}else{
+			MachineryController.get().unLockDoor();
+
+		}
 		isLocked = !isLocked;
+
+//		if(evt.getStateChange()== ItemEvent.SELECTED){
+//			MachineryController.get().lockDoor();
+//		}else{
+//			MachineryController.get().unLockDoor();
+//
+//		}
+//		if(isLocked){
+//			MachineryController.get().lockDoor();
+//
+//		}else{
+//			MachineryController.get().lockDoor();
+//
+//		}
 		System.out.println("isLocked: " + isLocked);
+
 	}// GEN-LAST:event_jCheckBox1ItemStateChanged
 
+	public void updateDoorLockState(boolean isLocked){
+//		doorStateCheckBox.setSelected(b);
+		if(isLocked){
+			if(!doorStateCheckBox.isSelected()){
+				doorStateCheckBox.setSelected(true);
+
+			}
+		}else{
+			if(doorStateCheckBox.isSelected()){
+				doorStateCheckBox.setSelected(false);
+
+			}
+		}
+	}
 	// Variables declaration - do not modify//GEN-BEGIN:variables
-	private javax.swing.JCheckBox jCheckBox1;
-	private javax.swing.JLabel jLabel1;
-	private javax.swing.JLabel jLabel4;
-	private javax.swing.JLabel jLabel7;
+	private javax.swing.JCheckBox doorStateCheckBox;
+	private javax.swing.JLabel header;
+	private javax.swing.JLabel coinQtyLabel;
+	private javax.swing.JLabel drinkQtyLabel;
 	private javax.swing.JPanel coinPanel;
 	private javax.swing.JPanel drinkPanel;
 	// End of variables declaration//GEN-END:variables

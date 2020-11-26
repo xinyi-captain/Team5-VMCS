@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import vendingmachinecontrolsystem.factory.PropertiesFactory;
 import vendingmachinecontrolsystem.model.Coin;
+import vendingmachinecontrolsystem.model.DoorState;
 import vendingmachinecontrolsystem.model.Drink;
 import vendingmachinecontrolsystem.model.Stock;
 import vendingmachinecontrolsystem.ui.SimulatorControlPanel;
@@ -28,13 +29,18 @@ public class SimulatorController {
         propertiesFactory = new PropertiesFactory();
         List<Stock> coinStocks = initCoins(); 
         List<Stock> drinkStocks = initDrinks();
+        DoorState doorState=initDoorSate();
+
         CustomerController.get().setCoinStocks(coinStocks);
         CustomerController.get().setDrinkStocks(drinkStocks);
         MaintainerController.get().setCoinStocks(coinStocks);
         MaintainerController.get().setDrinkStocks(drinkStocks);
-        MaintainerController.get().lock();
+        MachineryController.get().setDoorState(doorState);
+
         MachineryController.get().setCoinStocks(coinStocks);
         MachineryController.get().setDrinkStocks(drinkStocks);
+        MaintainerController.get().lock();
+
     }
     
     private List<Stock> initCoins() {
@@ -59,7 +65,14 @@ public class SimulatorController {
 		}
         return coinStocks;
     }
-    
+
+    private DoorState initDoorSate() {
+        DoorState doorState=DoorState.getInstance();
+//        doorState.addObserver(CustomerController.get());
+        doorState.addObserver(MachineryController.get());
+        doorState.addObserver(MaintainerController.get());
+        return  doorState;
+    }
     private List<Stock> initDrinks() {
     	List<Stock> drinkStocks = new ArrayList<>();
         Properties drinkProperties = propertiesFactory.getProperty(PropertiesFactory.DRINK);

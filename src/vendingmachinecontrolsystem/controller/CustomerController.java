@@ -211,7 +211,6 @@ public class CustomerController implements Observer {
 			coin.setQuantity(coin.getQuantity() + 1);
 		}
 	}
-	
 	public Drink getSelectedDrink() {
 		transactionDrinkOriginator.getStateFromMemento(transactionDrinkCaretaker.get(0));
 		Drink drink = (Drink) transactionDrinkOriginator.getStock();

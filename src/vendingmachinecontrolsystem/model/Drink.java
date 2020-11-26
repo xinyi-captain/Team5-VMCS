@@ -10,4 +10,6 @@ package vendingmachinecontrolsystem.model;
  * @author Dannel
  */
 public class Drink extends Stock {
+
+
 }
