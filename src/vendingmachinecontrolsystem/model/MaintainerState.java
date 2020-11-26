@@ -22,7 +22,7 @@ public class MaintainerState extends Observable{
 		return maintainerState;
 	}
 	
-	public boolean isLocked() {
+	public boolean isLogIn() {
 		return isLogIn;
 	}
 
