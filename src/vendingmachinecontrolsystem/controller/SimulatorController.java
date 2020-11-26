@@ -127,7 +127,6 @@ public class SimulatorController {
 	public void showMaintenancePanel() {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				CustomerController.get().disableTransactions();
 				MaintainerController.get().showPanel();
 			}
 		});
@@ -136,7 +135,6 @@ public class SimulatorController {
 	public void showMachineryPanel() {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				CustomerController.get().enableTransactions();
 				MachineryController.get().showPanel();
 			}
 		});
