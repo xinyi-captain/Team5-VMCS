@@ -155,13 +155,14 @@ public class CustomerController implements Observer {
 					lowestCoinDenomination = coin.getValue();
 			}
 		}
+		
+		System.out.println("remainder " + remainder);
+		System.out.println("lowestCoinDenomination " + lowestCoinDenomination);
+		System.out.println("result " + result);
 
 		for (int i = 0; i < COIN_STOCKS.size(); i++) {
-			if (remainder == 0 | remainder <= lowestCoinDenomination)
+			if (remainder == 0 | remainder < lowestCoinDenomination)
 				break; // no coin available to subtract and return
-			System.out.println("remainder " + remainder);
-			System.out.println("lowestCoinDenomination " + lowestCoinDenomination);
-			System.out.println("result " + result);
 			Coin coin = (Coin) COIN_STOCKS.get(i);
 			if (coin.getQuantity() > 0) {
 				if (coin.getValue() <= remainder) {
