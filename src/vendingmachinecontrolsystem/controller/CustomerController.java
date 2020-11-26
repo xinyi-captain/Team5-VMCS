@@ -224,6 +224,14 @@ public class CustomerController implements Observer {
 		Drink drink = (Drink) transactionDrinkOriginator.getStock();
 		return drink;
 	}
+	
+	public void disableTransactions() {
+		customerPanel.disableTransactions();
+	}
+	
+	public void enableTransactions() {
+		customerPanel.enableTransactions();
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {

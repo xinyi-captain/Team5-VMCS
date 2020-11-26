@@ -58,8 +58,7 @@ public class CustomerPanel extends javax.swing.JFrame {
 	}
 
 	public void updateInsertedAmount(double amount) {
-		amount = CurrencyHelper.add(amount, 
-				CurrencyHelper.coinsToAmount(insertedAmountTf.getText()));
+		amount = CurrencyHelper.add(amount, CurrencyHelper.coinsToAmount(insertedAmountTf.getText()));
 		insertedAmountTf.setText(CurrencyHelper.toCoins(amount));
 	}
 
@@ -151,6 +150,31 @@ public class CustomerPanel extends javax.swing.JFrame {
 		selectedDrinkLabel.setText(drink.getName() + " --- " + CurrencyHelper.toCoins(drink.getValue()));
 		coinCollectTf.setText(NO_COINS_TEXT);
 		enableCoinButtons();
+	}
+
+	public void disableTransactions() {
+		Component[] comp = coinPanel.getComponents();
+		for (int i = 0; i < comp.length; i++) {
+			if (comp[i] instanceof JButton) {
+				((JButton) comp[i]).setEnabled(false);
+			}
+		}
+		comp = drinkPanel.getComponents();
+		for (int i = 0; i < comp.length; i++) {
+			if (comp[i] instanceof JPanel) {
+				Component[] drinkComp = ((JPanel) comp[i]).getComponents();
+				for (int j = 0; j < drinkComp.length; j++) {
+					if (drinkComp[j] instanceof JButton) {
+						JButton jButton = ((JButton) drinkComp[j]);
+						jButton.setEnabled(false);
+					}
+				}
+			}
+		}
+	}
+
+	public void enableTransactions() {
+		disableCoinButtons();
 	}
 
 	public void refreshDrinkPanel(List<Stock> drinkList) {
@@ -415,18 +439,18 @@ public class CustomerPanel extends javax.swing.JFrame {
 	public void enableTerminateButton() {
 		terminateButton.setEnabled(true);
 	}
-	
+
 	public void disableTerminateButton() {
 		terminateButton.setEnabled(false);
 	}
-	
+
 	public void terminateTransaction() {
 		disableCoinButtons();
 		selectedDrinkLabel.setText(null);
 		coinCollectTf.setText(insertedAmountTf.getText());
 		insertedAmountTf.setText(NO_COINS_TEXT);
 	}
-	
+
 	private void terminateButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_terminateButtonActionPerformed
 		// TODO add your handling code here:
 		CustomerController.get().terminateTransaction();
