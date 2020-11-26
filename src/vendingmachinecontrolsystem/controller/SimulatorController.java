@@ -44,6 +44,7 @@ public class SimulatorController {
 		MachineryController.get().setDrinkStocks(drinkStocks);
 		MaintainerController.get().lock();
 
+		endSimulator();
 	}
 
 	private List<Stock> initCoins() {
@@ -137,6 +138,14 @@ public class SimulatorController {
 				MachineryController.get().showPanel();
 			}
 		});
+	}
+
+	public void startSimulator() {
+		simulatorControlPanel.enableSimulator();
+	}
+
+	public void endSimulator() {
+		simulatorControlPanel.disableSimulator();
 	}
 
 	public void saveProperties() {

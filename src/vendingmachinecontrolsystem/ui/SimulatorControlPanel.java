@@ -142,13 +142,30 @@ public class SimulatorControlPanel extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+    	SimulatorController.get().endSimulator();
     	SimulatorController.get().saveProperties();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
+    	SimulatorController.get().startSimulator();
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    public void enableSimulator() {
+    	jButton1.setEnabled(true);
+    	jButton2.setEnabled(true);
+    	jButton3.setEnabled(true);
+    	jButton4.setEnabled(true);
+    	jButton5.setEnabled(false);
+    }
+    
+    public void disableSimulator() {
+    	jButton1.setEnabled(false);
+    	jButton2.setEnabled(false);
+    	jButton3.setEnabled(false);
+    	jButton4.setEnabled(false);
+    	jButton5.setEnabled(true);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
