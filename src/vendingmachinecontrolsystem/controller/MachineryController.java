@@ -21,7 +21,6 @@ public class MachineryController implements Observer {
 	private DoorState doorState;
 	private boolean currentDoorSate;
 
-	private MachineState machineState;
 	public void coinEvent(Coin coin) {
 		//do your coin event here
 	}
