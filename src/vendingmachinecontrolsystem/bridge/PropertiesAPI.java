@@ -9,5 +9,7 @@ public interface PropertiesAPI {
     public final static String MACHINE_PROPERTIES = "VendingMachine.properties";
 	
 	public Properties getProperties();
+	
+	public void saveProperties(Properties properties);
 
 }

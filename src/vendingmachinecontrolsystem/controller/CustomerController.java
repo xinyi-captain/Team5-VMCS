@@ -188,14 +188,16 @@ public class CustomerController implements Observer {
 	}
 
 	public void terminateTransaction() {
-		restoreDrinkStockAftTermination();
-		restoreCoinStockAftTermination();
-		transactionCoinOriginator = null;
-		transactionDrinkOriginator = null;
-		transactionCoinCaretaker = null;
-		transactionDrinkCaretaker = null;
-		customerPanel.terminateTransaction();
-		customerPanel.disableTerminateButton();
+		if (transactionCoinOriginator != null) {
+			restoreDrinkStockAftTermination();
+			restoreCoinStockAftTermination();
+			transactionCoinOriginator = null;
+			transactionDrinkOriginator = null;
+			transactionCoinCaretaker = null;
+			transactionDrinkCaretaker = null;
+			customerPanel.terminateTransaction();
+			customerPanel.disableTerminateButton();
+		}
 	}
 
 	public void restoreDrinkStockAftTermination() {
@@ -211,6 +213,7 @@ public class CustomerController implements Observer {
 			coin.setQuantity(coin.getQuantity() + 1);
 		}
 	}
+
 	public Drink getSelectedDrink() {
 		transactionDrinkOriginator.getStateFromMemento(transactionDrinkCaretaker.get(0));
 		Drink drink = (Drink) transactionDrinkOriginator.getStock();

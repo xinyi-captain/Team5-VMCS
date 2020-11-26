@@ -27,5 +27,17 @@ public class PropertiesFactory {
 	      }
 	      return null;
 	}
+	
+	public void saveProperties(String propertyType, Properties properties) {
+	      if(propertyType.equalsIgnoreCase(COIN)){
+	         new CoinProperties().saveProperties(properties);
+	         
+	      } else if(propertyType.equalsIgnoreCase(DRINK)){
+	         new DrinkProperties().saveProperties(properties);
+	         
+	      } else if(propertyType.equalsIgnoreCase(MACHINE)){
+	    	  new MachineProperties().saveProperties(properties);
+	      }
+	}
 
 }

@@ -1,7 +1,9 @@
 package vendingmachinecontrolsystem.bridge;
 
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Properties;
 
 import vendingmachinecontrolsystem.model.OrderedProperties;
@@ -20,6 +22,16 @@ public class MachineProperties implements PropertiesAPI {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@Override
+	public void saveProperties(Properties properties) {
+		// TODO Auto-generated method stub
+		try (OutputStream output = new FileOutputStream(MACHINE_PROPERTIES)) {
+			properties.store(output, null);
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
 	}
 
 }
