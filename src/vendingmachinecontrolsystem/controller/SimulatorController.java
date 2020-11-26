@@ -165,7 +165,7 @@ public class SimulatorController {
 			iterator = drinkStocks.iterator();
 			while (iterator.hasNext()) {
 				Drink drink = (Drink) iterator.next();
-				drinkProp.put(drink.getName(), drink.getValue() + ";" + drink.getQuantity());
+				drinkProp.put(drink.getName(), CurrencyHelper.toCoins(drink.getValue()) + ";" + drink.getQuantity());
 			}
 			propertiesFactory.saveProperties(PropertiesFactory.DRINK, drinkProp);
 			System.out.println(drinkProp);
