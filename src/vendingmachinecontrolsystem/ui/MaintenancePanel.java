@@ -283,6 +283,8 @@ public class MaintenancePanel extends javax.swing.JFrame {
         // TODO add your handling code here:
         jTextField3.setText(jTextField2.getText());
         jTextField2.setText("0 c");
+        MaintainerController.get().collectAllCash();
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed

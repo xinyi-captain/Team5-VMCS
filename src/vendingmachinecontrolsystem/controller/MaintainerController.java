@@ -94,7 +94,12 @@ public class MaintainerController implements Observer {
 		maintenancePanel.pack();
 		maintenancePanel.setLocationRelativeTo(null);
 	}
-	
+
+	public void collectAllCash(){
+		COIN_STOCKS.forEach(coin->{
+			coin.setQuantity(0);
+		});
+	}
 	public void showTotalCashHeld() {
 		double total = 0;
 		Iterator<Stock> iterator = COIN_STOCKS.iterator();

@@ -125,7 +125,10 @@ public class MachineryPanel extends javax.swing.JFrame {
 		drinkQtyTextField.get(drink.getName()).setText(String.valueOf(drink.getQuantity()));
 	}
 	public void updateCoinUI(Coin coin){
-		coinQtyTextField.get(coin.getName()).setText(String.valueOf(coin.getQuantity()));
+		if(coinQtyTextField.get(coin.getName())!=null){
+			coinQtyTextField.get(coin.getName()).setText(String.valueOf(coin.getQuantity()));
+		}
+
 	}
 
 
