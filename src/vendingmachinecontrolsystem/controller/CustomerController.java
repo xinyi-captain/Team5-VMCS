@@ -49,6 +49,11 @@ public class CustomerController implements Observer {
 		if (customerPanel != null)
 			customerPanel.setVisible(true);
 	}
+	
+	public void closePanel() {
+		if (customerPanel != null)
+			customerPanel.setVisible(false);
+	}
 
 	public void setCoinStocks(List<Stock> coinList) {
 		COIN_STOCKS = coinList;

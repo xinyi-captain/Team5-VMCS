@@ -57,6 +57,11 @@ public class MaintainerController implements Observer {
 			maintenancePanel.setVisible(true);
 	}
 	
+	public void closePanel() {
+		if (maintenancePanel != null)
+			maintenancePanel.setVisible(false);
+	}
+	
     public void checkPassword() {
         String password = maintenancePanel.getEnterPassword();
         if(password.isEmpty() || password == null){

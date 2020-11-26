@@ -146,6 +146,9 @@ public class SimulatorController {
 
 	public void endSimulator() {
 		simulatorControlPanel.disableSimulator();
+		CustomerController.get().closePanel();
+		MaintainerController.get().closePanel();
+		MachineryController.get().closePanel();
 	}
 
 	public void saveProperties() {

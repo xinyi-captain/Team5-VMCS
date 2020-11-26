@@ -30,6 +30,11 @@ public class MachineryController implements Observer {
 			machineryPanel.setVisible(true);
 	}
 	
+	public void closePanel() {
+		if (machineryPanel != null)
+			machineryPanel.setVisible(false);
+	}
+	
 	public void setDrinkStocks(List<Stock> drinkList) {
 		DRINK_STOCKS = drinkList;
 		Iterator<Stock> iterator = DRINK_STOCKS.iterator();
