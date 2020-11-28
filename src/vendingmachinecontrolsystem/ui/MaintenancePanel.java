@@ -374,20 +374,19 @@ public class MaintenancePanel extends javax.swing.JFrame {
 
     private void initTextFieldListner() {
         jPasswordField1.getDocument().addDocumentListener(new DocumentListener() {
-        	String password = new String(jPasswordField1.getPassword());
             @Override
             public void changedUpdate(DocumentEvent e) {
-            	MaintainerController.get().checkPassword(password);
+            	MaintainerController.get().checkPassword(new String(jPasswordField1.getPassword()));
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-            	MaintainerController.get().checkPassword(password);
+            	MaintainerController.get().checkPassword(new String(jPasswordField1.getPassword()));
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-            	MaintainerController.get().checkPassword(password);
+            	MaintainerController.get().checkPassword(new String(jPasswordField1.getPassword()));
             }
         });
     }

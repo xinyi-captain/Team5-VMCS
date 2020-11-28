@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import vendingmachinecontrolsystem.util.CurrencyHelper;
+
 public class CurrencyHelperTest {
 
 	@Test
@@ -136,5 +138,36 @@ public class CurrencyHelperTest {
 		assertEquals(correctAnswer, result, 0.01);
 		assertNotEquals(wrongAnswer, result);
 	}
-
+	
+	@Test
+	public void testAdd() {
+		double a = 1;
+		double b = 0.5;
+		double correctAnswer = 1.5;
+		double wrongAnswer = 0;
+		double result = CurrencyHelper.add(a, b);
+		assertEquals(correctAnswer, result, 0.01);
+		assertNotEquals(wrongAnswer, result);
+		a = 1;
+		b = 0.65;
+		correctAnswer = 1.65;
+		wrongAnswer = 0;
+		result = CurrencyHelper.add(a, b);
+		assertEquals(correctAnswer, result, 0.01);
+		assertNotEquals(wrongAnswer, result);
+		a = 0.54;
+		b = 0.65;
+		correctAnswer = 1.19;
+		wrongAnswer = 0;
+		result = CurrencyHelper.add(a, b);
+		assertEquals(correctAnswer, result, 0.01);
+		assertNotEquals(wrongAnswer, result);
+		a = 0;
+		b = 0;
+		correctAnswer = 0;
+		wrongAnswer = 1;
+		result = CurrencyHelper.add(a, b);
+		assertEquals(correctAnswer, result, 0.01);
+		assertNotEquals(wrongAnswer, result);
+	}
 }
