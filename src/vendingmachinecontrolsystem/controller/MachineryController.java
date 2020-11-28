@@ -32,6 +32,7 @@ public class MachineryController implements Observer {
 			addDrinksToUI();
 			addCoinsToUI();
 			updateDoorStateToUI();
+			updateUIAccordingToDoorState(doorState);
 
 		}
 	}
@@ -135,11 +136,17 @@ public class MachineryController implements Observer {
 			System.out.println(arg0.toString());
 
 		}else if (arg0 instanceof DoorState) {
-			machineryPanel.updateDoorLockState(((DoorState) arg0).isLocked());
-			machineryPanel.changeTextFieldState(((DoorState) arg0).isLocked());
+			if(machineryPanel!=null){
+				updateUIAccordingToDoorState((DoorState) arg0);
+			}
 
 		}
 		System.out.println("---------------------- MachineryController UPDATE End ----------------------");
+	}
+
+	private void updateUIAccordingToDoorState(DoorState arg0) {
+		machineryPanel.updateDoorLockState(arg0.isLocked());
+		machineryPanel.changeTextFieldState(arg0.isLocked());
 	}
 
 
