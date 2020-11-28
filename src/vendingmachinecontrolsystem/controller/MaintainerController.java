@@ -121,6 +121,11 @@ public class MaintainerController implements Observer {
 	
 	public void showTotalCashHeld() {
 		double total = 0;
+		total = getTotalCash(total);
+		maintenancePanel.showTotalCashHeld(total);
+	}
+
+	public double getTotalCash(double total) {
 		Iterator<Stock> iterator = COIN_STOCKS.iterator();
 		while(iterator.hasNext()) {
 			Coin coin = (Coin) iterator.next();
@@ -130,14 +135,14 @@ public class MaintainerController implements Observer {
                 total += amount * quantity;
             }
 		}
-		maintenancePanel.showTotalCashHeld(total);
+		return total;
 	}
 	
-	public void changePrice(String oriValue) {
-    	System.out.println("change price" + oriValue);
+	public void changePrice(String newValue) {
+    	System.out.println("change price" + newValue);
     	if(selectedDrink != null) {
-    		double newPrice = Double.parseDouble(oriValue);
-    		selectedDrink.setValue(newPrice);
+    		double price = Double.parseDouble(newValue);
+    		selectedDrink.setValue(price);
     	}
 	}
 	
