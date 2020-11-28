@@ -8,10 +8,12 @@ import java.util.Observer;
 import vendingmachinecontrolsystem.factory.PropertiesFactory;
 import vendingmachinecontrolsystem.model.Coin;
 import vendingmachinecontrolsystem.model.Drink;
+import vendingmachinecontrolsystem.model.MaintainerState;
 import vendingmachinecontrolsystem.model.Stock;
 import vendingmachinecontrolsystem.ui.CustomerPanel;
 import vendingmachinecontrolsystem.ui.MachineryPanel;
 import vendingmachinecontrolsystem.ui.MaintenancePanel;
+import vendingmachinecontrolsystem.util.CurrencyHelper;
 
 public class MaintainerController implements Observer {
 	
@@ -22,6 +24,8 @@ public class MaintainerController implements Observer {
 	private MaintenancePanel maintenancePanel;
     private PropertiesFactory propertiesFactory;
     private String PASSWORD="123";
+    private MaintainerState maintainerState;
+    private Drink selectedDrink;
 
 	public static MaintainerController get() {
 		if (maintainerController == null) {
@@ -44,6 +48,10 @@ public class MaintainerController implements Observer {
 		maintenancePanel = new MaintenancePanel();
 	}
 	
+	public void setSelectedDrink(Drink drink) {
+		selectedDrink = drink;
+	}
+	
 	public void lock() {
 		maintenancePanel.lock();
 	}
@@ -62,15 +70,25 @@ public class MaintainerController implements Observer {
 			maintenancePanel.setVisible(false);
 	}
 	
-    public void checkPassword() {
-        String password = maintenancePanel.getEnterPassword();
+	public void logIn(){
+		maintainerState.setLogIn(true);
+	}
+	public void unLogIn(){
+		maintainerState.setLogIn(false);
+	}
+	
+    public void checkPassword(String password) {
         if(password.isEmpty() || password == null){
         	maintenancePanel.resetPassword();  
-        } else if (password.equals(PASSWORD)) {
+        } else if (validatePassword(password)) {
         	maintenancePanel. validPassword();
         } else {
         	maintenancePanel.invalidPassword();
         }
+    }
+    
+    public boolean validatePassword(String password) {
+    	return password.equals(PASSWORD);
     }
 	
 	public void setDrinkStocks(List<Stock> drinkList) {
@@ -100,6 +118,7 @@ public class MaintainerController implements Observer {
 			coin.setQuantity(0);
 		});
 	}
+	
 	public void showTotalCashHeld() {
 		double total = 0;
 		Iterator<Stock> iterator = COIN_STOCKS.iterator();
@@ -112,6 +131,14 @@ public class MaintainerController implements Observer {
             }
 		}
 		maintenancePanel.showTotalCashHeld(total);
+	}
+	
+	public void changePrice(String oriValue) {
+    	System.out.println("change price" + oriValue);
+    	if(selectedDrink != null) {
+    		double newPrice = Double.parseDouble(oriValue);
+    		selectedDrink.setValue(newPrice);
+    	}
 	}
 	
 	@Override
