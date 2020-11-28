@@ -10,10 +10,7 @@ import vendingmachinecontrolsystem.model.Coin;
 import vendingmachinecontrolsystem.model.Drink;
 import vendingmachinecontrolsystem.model.MaintainerState;
 import vendingmachinecontrolsystem.model.Stock;
-import vendingmachinecontrolsystem.ui.CustomerPanel;
-import vendingmachinecontrolsystem.ui.MachineryPanel;
 import vendingmachinecontrolsystem.ui.MaintenancePanel;
-import vendingmachinecontrolsystem.util.CurrencyHelper;
 
 public class MaintainerController implements Observer {
 	
@@ -139,7 +136,7 @@ public class MaintainerController implements Observer {
 	}
 	
 	public void changePrice(String newValue) {
-    	System.out.println("change price" + newValue);
+    	//System.out.println("change price" + newValue);
     	if(selectedDrink != null) {
     		double price = Double.parseDouble(newValue);
     		selectedDrink.setValue(price);

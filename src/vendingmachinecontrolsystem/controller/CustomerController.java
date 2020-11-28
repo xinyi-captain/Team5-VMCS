@@ -66,20 +66,25 @@ public class CustomerController implements Observer {
 		customerPanel.setLocationRelativeTo(null);
 	}
 
-	public void coinEvent(Coin coin) {
+	public boolean coinEvent(Coin coin) {
+		boolean result = false;
 		if (coin.getValue() == 0) {
 			invalidCoin();
 		} else {
 			validCoin(coin);
+			result = true;
 		}
+		return result;
 	}
 
 	private void validCoin(Coin coin) {
-		transactionCoinOriginator.setStock(coin);
-		transactionDrinkCaretaker.addMemento(transactionCoinOriginator.saveStateToMemento());
-		coin.setQuantity(coin.getQuantity() + 1);
-		customerPanel.updateInsertedAmount(coin.getValue());
-		checkAmountSufficiency();
+		if (transactionCoinOriginator != null) {
+			transactionCoinOriginator.setStock(coin);
+			transactionDrinkCaretaker.addMemento(transactionCoinOriginator.saveStateToMemento());
+			coin.setQuantity(coin.getQuantity() + 1);
+			customerPanel.updateInsertedAmount(coin.getValue());
+			checkAmountSufficiency();
+		}
 	}
 
 	private void invalidCoin() {
@@ -155,11 +160,6 @@ public class CustomerController implements Observer {
 					lowestCoinDenomination = coin.getValue();
 			}
 		}
-		
-//		System.out.println("remainder " + remainder);
-//		System.out.println("lowestCoinDenomination " + lowestCoinDenomination);
-//		System.out.println("result " + result);
-
 		for (int i = 0; i < COIN_STOCKS.size(); i++) {
 			if (remainder == 0 | remainder < lowestCoinDenomination)
 				break; // no coin available to subtract and return
@@ -175,12 +175,11 @@ public class CustomerController implements Observer {
 			}
 			if (i == COIN_STOCKS.size() - 1)
 				i = -1; // restart loop
-			System.out.println("i -----------" + i);
 		}
 		return result;
 	}
 
-	public boolean checkIfHigerCoinAvailable(double amount, double coinValueCheck) {
+	private boolean checkIfHigerCoinAvailable(double amount, double coinValueCheck) {
 		boolean result = false;
 		Iterator<Stock> iterator = COIN_STOCKS.iterator();
 		while (iterator.hasNext()) {
@@ -206,10 +205,11 @@ public class CustomerController implements Observer {
 		}
 	}
 
-	public void restoreDrinkStockAftTermination() {
+	public Drink restoreDrinkStockAftTermination() {
 		transactionDrinkOriginator.getStateFromMemento(transactionDrinkCaretaker.get(0));
 		Drink drink = (Drink) transactionDrinkOriginator.getStock();
 		drink.setQuantity(drink.getQuantity() + 1);
+		return drink;
 	}
 
 	public void restoreCoinStockAftTermination() {
