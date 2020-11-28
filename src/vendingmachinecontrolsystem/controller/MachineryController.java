@@ -5,10 +5,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import vendingmachinecontrolsystem.model.Coin;
-import vendingmachinecontrolsystem.model.DoorState;
-import vendingmachinecontrolsystem.model.Drink;
-import vendingmachinecontrolsystem.model.Stock;
+import vendingmachinecontrolsystem.model.*;
 import vendingmachinecontrolsystem.ui.MachineryPanel;
 
 public class MachineryController implements Observer {
@@ -19,6 +16,7 @@ public class MachineryController implements Observer {
 	private List<Stock> DRINK_STOCKS;
 	private MachineryPanel machineryPanel;
 	private DoorState doorState;
+
 	private boolean currentDoorSate;
 
 	public void coinEvent(Coin coin) {
@@ -28,26 +26,27 @@ public class MachineryController implements Observer {
 	public void showPanel() {
 		if (machineryPanel != null)
 			machineryPanel.setVisible(true);
+		else{
+			machineryPanel = new MachineryPanel();
+
+			addDrinksToUI();
+			addCoinsToUI();
+			updateDoorStateToUI();
+
+		}
 	}
 	
 	public void closePanel() {
 		if (machineryPanel != null)
 			machineryPanel.setVisible(false);
+
 	}
-	
-	public void setDrinkStocks(List<Stock> drinkList) {
-		DRINK_STOCKS = drinkList;
-		Iterator<Stock> iterator = DRINK_STOCKS.iterator();
-		while (iterator.hasNext()) {
-			Drink drink = (Drink) iterator.next();
-			machineryPanel.addNewDrink(drink);
-		}
-		machineryPanel.pack();
-		machineryPanel.setLocationRelativeTo(null);
+
+	private void updateDoorStateToUI() {
+		machineryPanel.updateDoorLockState(doorState.isLocked());
 	}
-	
-	public void setCoinStocks(List<Stock> coinList) {
-		COIN_STOCKS = coinList;
+
+	private void addCoinsToUI() {
 		Iterator<Stock> iterator = COIN_STOCKS.iterator();
 		while (iterator.hasNext()) {
 			Coin coin = (Coin) iterator.next();
@@ -56,11 +55,46 @@ public class MachineryController implements Observer {
 		machineryPanel.pack();
 		machineryPanel.setLocationRelativeTo(null);
 	}
+
+	private void addDrinksToUI() {
+		Iterator<Stock> iterator = DRINK_STOCKS.iterator();
+		while (iterator.hasNext()) {
+			Drink drink = (Drink) iterator.next();
+			machineryPanel.addNewDrink(drink);
+		}
+		machineryPanel.pack();
+		machineryPanel.setLocationRelativeTo(null);
+	}
+
+	public void setDrinkStocks(List<Stock> drinkList) {
+		DRINK_STOCKS = drinkList;
+	}
+
+	public void changeDrinkStock(Drink drink, int qty){
+		if(!doorState.isLocked()){
+			if(qty>=0&&qty<=20){
+				drink.setQuantity(qty);
+			}
+		}
+	}
+
+	public void changeCoinStock(Coin coin, int qty){
+		if(!doorState.isLocked()){
+			if(qty>=0&&qty<=40){
+				coin.setQuantity(qty);
+			}
+		}
+	}
+
+	public void setCoinStocks(List<Stock> coinList) {
+		COIN_STOCKS = coinList;
+	}
 	public void setDoorState(DoorState doorState) {
 		this.doorState=doorState;
-		machineryPanel.updateDoorLockState(doorState.isLocked());
 	}
-	
+
+
+
 	public static MachineryController get() {
 		if (machineryController == null) {
 			synchronized (MachineryController.class) {
@@ -76,7 +110,6 @@ public class MachineryController implements Observer {
 		if (machineryController != null) {
 			throw new RuntimeException("Use get() method to get the single instance of this class.");
 		}
-		machineryPanel = new MachineryPanel();
 
 //		machineState.addDoorStateObserver(this);
 //		machineState.addCoinStockObserver(this);
@@ -90,23 +123,13 @@ public class MachineryController implements Observer {
 		System.out.println("---------------------- MachineryController UPDATE Start ----------------------");
 		if (arg0 instanceof Coin) {
 			System.out.println("Coin Update");
-//			Iterator<Stock> iterator = COIN_STOCKS.iterator();
-//			while (iterator.hasNext()) {
-//				Coin coin = (Coin) iterator.next();
-//				System.out.println(coin.toString());
-//			}
 
 			Coin coin= (Coin) arg0;
 			machineryPanel.updateCoinUI(coin);
 
 		} else if (arg0 instanceof Drink) {
 			System.out.println("Drink MachineryController  Update");
-//			Iterator<Stock> iterator = DRINK_STOCKS.iterator();
-//			while (iterator.hasNext()) {
-//				Drink drink = (Drink) iterator.next();
-//				System.out.println(drink.toString());
-//				machineryPanel.
-//			}
+
 			Drink drink= (Drink) arg0;
 			machineryPanel.updateDrinkUI(drink);
 			System.out.println(arg0.toString());
@@ -121,10 +144,15 @@ public class MachineryController implements Observer {
 
 
 	public void lockDoor(){
-		doorState.setLocked(true);
+		if(MaintainerState.getInstance().isLogIn()){
+			doorState.setLocked(true);
+		}
 	}
 	public void unLockDoor(){
-		doorState.setLocked(false);
+
+		if(MaintainerState.getInstance().isLogIn()){
+			doorState.setLocked(false);
+		}
 	}
 
 
