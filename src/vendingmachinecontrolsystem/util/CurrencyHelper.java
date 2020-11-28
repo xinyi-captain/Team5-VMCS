@@ -12,17 +12,17 @@ package vendingmachinecontrolsystem.util;
 public class CurrencyHelper {
 
     public static String toCoins(double amount) {
-        return String.valueOf((int)(amount * 100.0)) + " c";
+        return (int)(amount * 100.0) + " c";
     }
     
     public static double coinsToAmount(String coins){
         double results = 0;
         if(coins.contains("c")){
-           coins = coins.replace("c", "");
-           results = Double.parseDouble(coins)/100.0;
+           coins = coins.replace("c", "").trim();
+           results = Double.parseDouble(String.format("%.2f",Double.parseDouble(coins)/100.0));
         } else if (coins.contains("$")){
             coins = coins.replace("$", "");
-            results = Double.parseDouble(coins);
+            results = Double.parseDouble(String.format("%.2f",Double.parseDouble(coins)));
         } 
         return results;
     }
