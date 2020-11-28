@@ -43,6 +43,7 @@ public class MaintenancePanel extends javax.swing.JFrame {
     private PropertiesFactory propertiesFactory;
     private String PASSWORD="123";
     private boolean isLocked = true;
+    private Drink selectedDrink;
 
     public MaintenancePanel() {
     	propertiesFactory = new PropertiesFactory();
@@ -157,6 +158,12 @@ public class MaintenancePanel extends javax.swing.JFrame {
         jTextField1.setPreferredSize(new java.awt.Dimension(75, 23));
         jPanel5.add(jTextField1, new java.awt.GridBagConstraints());
 
+        jTextField1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                selectedDrink.setValue(Double.valueOf(jTextField1.getText()));
+            }
+        });
         jPanel6.setLayout(new java.awt.GridBagLayout());
 
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -430,6 +437,7 @@ public class MaintenancePanel extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 drinkButton(jTextField, String.valueOf(drink.getValue()));
+                selectedDrink=drink;
             }
         });
 
