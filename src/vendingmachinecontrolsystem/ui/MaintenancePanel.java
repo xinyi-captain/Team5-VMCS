@@ -346,21 +346,17 @@ public class MaintenancePanel extends javax.swing.JFrame {
         jTextField3.setText("0 c");
     }
     
-    public String getEnterPassword() {
-    	String password = new String(jPasswordField1.getPassword());
-    	return password;
-    }
 
-    private void checkPassword() {
-        String password = new String(jPasswordField1.getPassword());
-        if(password.isEmpty() || password == null){
-          resetPassword();  
-        } else if (password.equals(PASSWORD)) {
-            validPassword();
-        } else {
-            invalidPassword();
-        }
-    }
+//    private void checkPassword() {
+//        String password = new String(jPasswordField1.getPassword());
+//        if(password.isEmpty() || password == null){
+//          resetPassword();  
+//        } else if (password.equals(PASSWORD)) {
+//            validPassword();
+//        } else {
+//            invalidPassword();
+//        }
+//    }
 
     public void validPassword() {
         jLabel3.setText(VALID_PASSWORD);
@@ -378,19 +374,20 @@ public class MaintenancePanel extends javax.swing.JFrame {
 
     private void initTextFieldListner() {
         jPasswordField1.getDocument().addDocumentListener(new DocumentListener() {
+        	String password = new String(jPasswordField1.getPassword());
             @Override
             public void changedUpdate(DocumentEvent e) {
-            	MaintainerController.get().checkPassword();
+            	MaintainerController.get().checkPassword(password);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-            	MaintainerController.get().checkPassword();
+            	MaintainerController.get().checkPassword(password);
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-            	MaintainerController.get().checkPassword();
+            	MaintainerController.get().checkPassword(password);
             }
         });
     }
