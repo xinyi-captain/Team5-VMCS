@@ -311,6 +311,7 @@ public class MaintenancePanel extends javax.swing.JFrame {
         jPanel7.setVisible(false);
         jPanel8.setVisible(false);
         jPanel9.setVisible(false);
+        CustomerController.get().enableTransactions();
     }
 
     public void unlock() {
@@ -326,6 +327,7 @@ public class MaintenancePanel extends javax.swing.JFrame {
         jPanel7.setVisible(true);
         jPanel8.setVisible(true);
         jPanel9.setVisible(true);
+        CustomerController.get().disableTransactions();
     }
 
     public void resetPassword() {
