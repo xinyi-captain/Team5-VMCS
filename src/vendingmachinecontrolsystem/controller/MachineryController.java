@@ -125,17 +125,24 @@ public class MachineryController implements Observer {
 		if (arg0 instanceof Coin) {
 			System.out.println("Coin Update");
 
-			Coin coin= (Coin) arg0;
-			machineryPanel.updateCoinUI(coin);
+			if(machineryPanel!=null) {
+				System.out.println("Coin Update");
 
-		} else if (arg0 instanceof Drink) {
+				Coin coin= (Coin) arg0;
+				machineryPanel.updateCoinUI(coin);
+			}
+
+			} else if (arg0 instanceof Drink) {
 			System.out.println("Drink MachineryController  Update");
 
-			Drink drink= (Drink) arg0;
-			machineryPanel.updateDrinkUI(drink);
-			System.out.println(arg0.toString());
+			if(machineryPanel!=null) {
 
-		}else if (arg0 instanceof DoorState) {
+				Drink drink= (Drink) arg0;
+				machineryPanel.updateDrinkUI(drink);
+				System.out.println(arg0.toString());
+			}
+
+			}else if (arg0 instanceof DoorState) {
 			if(machineryPanel!=null){
 				updateUIAccordingToDoorState((DoorState) arg0);
 			}
